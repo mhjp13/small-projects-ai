@@ -4,6 +4,13 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+pygame = "==2.0.1"
+scipy = "*"
+pylint = "*"
+scikit-learn = "*"
+opencv-python = "*"
+tensorflow = "*"
+nltk = "*"
 
 [dev-packages]
 
