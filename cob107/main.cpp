@@ -5,6 +5,7 @@
 #include <iterator>
 #include <vector>
 #include <algorithm>
+#include <fstream>
 using namespace std;
 
 #define N 3
@@ -14,47 +15,22 @@ vector< vector<int> > getNeighbourCoords(int x, int y);
 void printCoords(vector< vector<int> > coords);
 vector<int> getEmptySpaceCoords(vector< vector<char> > array);
 vector < vector<char> > generateNewGrid(int oldX, int oldY, int newX, int newY, vector< vector<char> > array);
-void bfs_search();
-void dfs_search();
+void dfs_search(vector< vector<char> > array);
+void writeGrid(vector< vector<char> > array);
 
-vector< vector<char> > twoDArray = {{'1', '2', '3'}, {'4','5','6'}, {'7','8','0'}};
+vector< vector<char> > s1 = {{'a', 'b', 'c'}, {'d','e','f'}, {'g','h','0'}};
+vector< vector<char> > s2 = {{'0', 'e', 'b'}, {'a','h','c'}, {'d','g','f'}};
+set<vector< vector<char> >> common_states;
 
 int main(int argc, char *argv[]) {
-    bfs_search();
-    // dfs_search();
+    dfs_search(s1);
 }
 
-void bfs_search() {
-    set<vector< vector<char> >> explored;
-    queue< vector< vector<char> >> frontier;
-    frontier.push(twoDArray);
-    explored.insert(twoDArray);
-
-    while (!frontier.empty()) {
-        vector< vector<char> > grid = frontier.front();
-        frontier.pop();
-        vector<int> emptySpaceCoords = getEmptySpaceCoords(grid);
-        vector< vector<int> > neighbours = getNeighbourCoords(emptySpaceCoords[0], emptySpaceCoords[1]);
-
-        printGrid(grid);
-        printf("\n");
-        for (int i = 0; i < neighbours.size(); i++) {
-            vector < vector<char> > newGrid = generateNewGrid(emptySpaceCoords[0], emptySpaceCoords[1], neighbours[i][0], neighbours[i][1], grid);
-            if (explored.find(newGrid) == explored.end()) {
-                explored.insert(newGrid);
-                frontier.push(newGrid);
-            }
-        }
-    }
-
-    printf("\nStates reached: %d\n", explored.size());
-}
-
-void dfs_search() {
+void dfs_search(vector< vector<char> > startState) {
     set<vector< vector<char> >> explored;
     stack< vector< vector<char> >> frontier;
-    frontier.push(twoDArray);
-    explored.insert(twoDArray);
+    frontier.push(startState);
+    explored.insert(startState);
 
     while (!frontier.empty()) {
         vector< vector<char> > grid = frontier.top();
@@ -62,20 +38,18 @@ void dfs_search() {
         vector<int> emptySpaceCoords = getEmptySpaceCoords(grid);
         vector< vector<int> > neighbours = getNeighbourCoords(emptySpaceCoords[0], emptySpaceCoords[1]);
 
-        
-
-        printGrid(grid);
-        printf("\n");
+        writeGrid(grid);
         for (int i = 0; i < neighbours.size(); i++) {
             vector < vector<char> > newGrid = generateNewGrid(emptySpaceCoords[0], emptySpaceCoords[1], neighbours[i][0], neighbours[i][1], grid);
             if (explored.find(newGrid) == explored.end()) {
                 explored.insert(newGrid);
                 frontier.push(newGrid);
             }
+            common_states.insert(newGrid);
         }
     }
 
-    printf("\nStates reached: %d\n", explored.size());
+    printf("\nStates reached: %lu\n", explored.size());
 }
 
 vector< vector<int> > getNeighbourCoords(int x, int y) {
@@ -99,7 +73,6 @@ vector < vector<char> > generateNewGrid(int oldX, int oldY, int newX, int newY, 
     char temp = newGrid[newX][newY];
     newGrid[newX][newY] = '0';
     newGrid[oldX][oldY] = temp;
-    // printGrid(newGrid);
     
     return newGrid;
 }
@@ -118,6 +91,19 @@ void printGrid(vector< vector<char> > array) {
             printf("%c ", array[i][j]);
         printf("\n");
     }
+}
+
+void writeGrid(vector< vector<char> > array) {
+    string filename("R(S1).txt");
+    ofstream MyFile;
+
+    MyFile.open(filename, std::ios_base::app);
+    for (int i = 0; i < N; i++)
+    {
+        MyFile << array[i][0] << " " << array[i][1] << " " << array[i][2] << "\n";
+    }
+    MyFile << "  ↓\n";
+    MyFile.close();
 }
 
 void printCoords(vector< vector<int> > coords) {
