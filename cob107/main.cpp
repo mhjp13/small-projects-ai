@@ -6,27 +6,57 @@
 #include <vector>
 #include <algorithm>
 #include <fstream>
+#include <string>
+#include <sstream>
 using namespace std;
 
 #define N 3
 
-void printGrid(vector< vector<char> > array);
 vector< vector<int> > getNeighbourCoords(int x, int y);
-void printCoords(vector< vector<int> > coords);
 vector<int> getEmptySpaceCoords(vector< vector<char> > array);
 vector < vector<char> > generateNewGrid(int oldX, int oldY, int newX, int newY, vector< vector<char> > array);
-void dfs_search(vector< vector<char> > array);
-void writeGrid(vector< vector<char> > array);
-
-vector< vector<char> > s1 = {{'a', 'b', 'c'}, {'d','e','f'}, {'g','h','0'}};
-vector< vector<char> > s2 = {{'0', 'e', 'b'}, {'a','h','c'}, {'d','g','f'}};
-set<vector< vector<char> >> common_states;
+set<vector< vector<char> >> dfs_search(vector< vector<char> > startState, char* file_name);
+void writeGrid(vector< vector<char> > array, char* file_name);
+string gridToString(vector< vector<char> > array);
+bool isSolvable(string str);
+void searchAlgorithm(vector< vector<char> > s1, vector< vector<char> > s2);
 
 int main(int argc, char *argv[]) {
-    dfs_search(s1);
+    set<vector< vector<char> >> exploredS1;
+    set<vector< vector<char> >> exploredS2;
+    vector< vector<char> > s1 = {{'a', 'b', 'c'}, {'d','e','f'}, {'g','h','0'}};
+    vector< vector<char> > s2 = {{'0', 'e', 'b'}, {'a','h','c'}, {'d','g','f'}};
+    vector< vector<char> > s3 = {{'1', '8', '2'}, {'0','4','3'}, {'7','6','5'}};
+    vector< vector<char> > s4 = {{'8', '1', '2'}, {'0','4','3'}, {'7','6','5'}};
+
+
+    searchAlgorithm(s1, s2);
+    // cout << '0' << "\n";
+    // vector<vector< vector<char> >> intersection;
+    // cout << "Number of states in S2: " << exploredS2.size() << "\n";
+    // set_intersection(exploredS1.begin(), exploredS1.end(), exploredS2.begin(), exploredS2.end(), back_inserter(intersection));
+    // cout << "Number of common states: " << intersection.size() << "\n";
 }
 
-void dfs_search(vector< vector<char> > startState) {
+void searchAlgorithm(vector< vector<char> > s1, vector< vector<char> > s2) {
+    set<vector< vector<char> >> exploredS1;
+    set<vector< vector<char> >> exploredS2;
+
+    if (isSolvable(gridToString(s1)) == isSolvable(gridToString(s2))) {
+        exploredS1 = dfs_search(s1, "R(S1) - R(S2) - R(S1 & S2).txt");
+        cout << "Number of states in S1: " << exploredS1.size() << "\n";
+        cout << "Number of states in S2: " << exploredS1.size() << "\n";
+        cout << "Number of states in S1 and S2: " << exploredS1.size() << "\n";
+    } else {
+        exploredS1 = dfs_search(s1, "R(S1).txt");
+        exploredS2 = dfs_search(s2, "R(S2).txt");
+        cout << "Number of states in S1: " << exploredS1.size() << "\n";
+        cout << "Number of states in S2: " << exploredS2.size() << "\n";
+        cout << "Number of states in S1 and S2: " << '0' << "\n";
+    }
+}
+
+set<vector< vector<char> >> dfs_search(vector< vector<char> > startState, char* file_name) {
     set<vector< vector<char> >> explored;
     stack< vector< vector<char> >> frontier;
     frontier.push(startState);
@@ -38,18 +68,17 @@ void dfs_search(vector< vector<char> > startState) {
         vector<int> emptySpaceCoords = getEmptySpaceCoords(grid);
         vector< vector<int> > neighbours = getNeighbourCoords(emptySpaceCoords[0], emptySpaceCoords[1]);
 
-        writeGrid(grid);
+        writeGrid(grid, file_name);
         for (int i = 0; i < neighbours.size(); i++) {
             vector < vector<char> > newGrid = generateNewGrid(emptySpaceCoords[0], emptySpaceCoords[1], neighbours[i][0], neighbours[i][1], grid);
             if (explored.find(newGrid) == explored.end()) {
                 explored.insert(newGrid);
                 frontier.push(newGrid);
             }
-            common_states.insert(newGrid);
         }
     }
 
-    printf("\nStates reached: %lu\n", explored.size());
+    return explored;
 }
 
 vector< vector<int> > getNeighbourCoords(int x, int y) {
@@ -84,30 +113,48 @@ vector<int> getEmptySpaceCoords(vector< vector<char> > array) {
     }
 }
 
-void printGrid(vector< vector<char> > array) {
-    for (int i = 0; i < N; i++)
-    {
+string gridToString(vector< vector<char> > array) {
+    string newString;
+    newString.resize(9);
+
+    for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++)
-            printf("%c ", array[i][j]);
-        printf("\n");
+            newString[j + N*i] = array[i][j];
     }
+
+    return newString;
 }
 
-void writeGrid(vector< vector<char> > array) {
-    string filename("R(S1).txt");
+bool isSolvable(string str) {
+    int inv_count = 0;
+    for (int i = 0; i < N*N - 1; i++) {
+        for (int j = i+1; j < N*N; j++)
+            if (str[j] != '0' && str[i] != '0' &&  str[i] > str[j])
+                inv_count++;
+    }
+
+    return inv_count % 2 == 0;
+}
+
+// void printGrid(vector< vector<char> > array) {
+//     for (int i = 0; i < N; i++)
+//     {
+//         for (int j = 0; j < N; j++)
+//             printf("%c ", array[i][j]);
+//         printf("\n");
+//     }
+// }
+
+void writeGrid(vector< vector<char> > array, char* file_name) {
+    string filename(file_name);
     ofstream MyFile;
 
     MyFile.open(filename, std::ios_base::app);
-    for (int i = 0; i < N; i++)
-    {
-        MyFile << array[i][0] << " " << array[i][1] << " " << array[i][2] << "\n";
-    }
-    MyFile << "  ↓\n";
+    if (array.size() == N)
+        for (int i = 0; i < N; i++)
+        {
+            MyFile << array[i][0] << " " << array[i][1] << " " << array[i][2] << "\n";
+        }
+    MyFile << "\n";
     MyFile.close();
-}
-
-void printCoords(vector< vector<int> > coords) {
-    for (int i = 0; i < coords.size(); i++) {
-        printf("(%d, %d)\n", coords[i][0], coords[i][1]);
-    }
 }
