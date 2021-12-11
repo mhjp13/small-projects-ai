@@ -8,6 +8,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <cstring>
 using namespace std;
 
 #define N 3
@@ -31,21 +32,10 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    set<vector< vector<char> >> exploredS1;
-    set<vector< vector<char> >> exploredS2;
-    vector< vector<char> > s1 = {{'a', 'b', 'c'}, {'d','e','f'}, {'g','h','0'}};
-    vector< vector<char> > s2 = {{'0', 'e', 'b'}, {'a','h','c'}, {'d','g','f'}};
-    vector< vector<char> > s3 = {{'1', '8', '2'}, {'0','4','3'}, {'7','6','5'}};
-    vector< vector<char> > s4 = {{'8', '1', '2'}, {'0','4','3'}, {'7','6','5'}};
-    vector< vector<char> > s5 = stringToGrid(argv[1]);
-    vector< vector<char> > s6 = stringToGrid(argv[2]);
+    vector< vector<char> > s1 = stringToGrid(argv[1]);
+    vector< vector<char> > s2 = stringToGrid(argv[2]);
 
-    searchAlgorithm(s5, s6);
-    // cout << '0' << "\n";
-    // vector<vector< vector<char> >> intersection;
-    // cout << "Number of states in S2: " << exploredS2.size() << "\n";
-    // set_intersection(exploredS1.begin(), exploredS1.end(), exploredS2.begin(), exploredS2.end(), back_inserter(intersection));
-    // cout << "Number of common states: " << intersection.size() << "\n";
+    searchAlgorithm(s1, s2);
 }
 
 void searchAlgorithm(vector< vector<char> > s1, vector< vector<char> > s2) {
