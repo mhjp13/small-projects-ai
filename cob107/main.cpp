@@ -20,17 +20,27 @@ void writeGrid(vector< vector<char> > array, char* file_name);
 string gridToString(vector< vector<char> > array);
 bool isSolvable(string str);
 void searchAlgorithm(vector< vector<char> > s1, vector< vector<char> > s2);
+vector< vector<char> > stringToGrid(char *str);
 
 int main(int argc, char *argv[]) {
+    if (argc != 3) {
+        cout << "Invalid number of parameters\n";
+        return 0;
+    } else if (strlen(argv[1]) != 9 or strlen(argv[2]) != 9) {
+        cout << "Invalid parameters\n";
+        return 0;
+    }
+
     set<vector< vector<char> >> exploredS1;
     set<vector< vector<char> >> exploredS2;
     vector< vector<char> > s1 = {{'a', 'b', 'c'}, {'d','e','f'}, {'g','h','0'}};
     vector< vector<char> > s2 = {{'0', 'e', 'b'}, {'a','h','c'}, {'d','g','f'}};
     vector< vector<char> > s3 = {{'1', '8', '2'}, {'0','4','3'}, {'7','6','5'}};
     vector< vector<char> > s4 = {{'8', '1', '2'}, {'0','4','3'}, {'7','6','5'}};
+    vector< vector<char> > s5 = stringToGrid(argv[1]);
+    vector< vector<char> > s6 = stringToGrid(argv[2]);
 
-
-    searchAlgorithm(s1, s2);
+    searchAlgorithm(s5, s6);
     // cout << '0' << "\n";
     // vector<vector< vector<char> >> intersection;
     // cout << "Number of states in S2: " << exploredS2.size() << "\n";
@@ -125,6 +135,13 @@ string gridToString(vector< vector<char> > array) {
     return newString;
 }
 
+vector< vector<char> > stringToGrid(char *str) {
+    vector< vector<char> > newGrid = {{'-', '-', '-'}, {'-', '-', '-'}, {'-', '-', '-'}};
+    for (int i = 0; i < 9; i++)
+        newGrid[i / 3][i%3] = str[i];
+    return newGrid;
+}
+
 bool isSolvable(string str) {
     int inv_count = 0;
     for (int i = 0; i < N*N - 1; i++) {
@@ -135,15 +152,6 @@ bool isSolvable(string str) {
 
     return inv_count % 2 == 0;
 }
-
-// void printGrid(vector< vector<char> > array) {
-//     for (int i = 0; i < N; i++)
-//     {
-//         for (int j = 0; j < N; j++)
-//             printf("%c ", array[i][j]);
-//         printf("\n");
-//     }
-// }
 
 void writeGrid(vector< vector<char> > array, char* file_name) {
     string filename(file_name);
