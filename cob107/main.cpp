@@ -44,9 +44,9 @@ void searchAlgorithm(vector< vector<char> > s1, vector< vector<char> > s2) {
 
     if (isSolvable(gridToString(s1)) == isSolvable(gridToString(s2))) {
         exploredS1 = dfs_search(s1, "R(S1) - R(S2) - R(S1 & S2).txt");
-        cout << "Number of states in S1: " << exploredS1.size() << "\n";
-        cout << "Number of states in S2: " << exploredS1.size() << "\n";
-        cout << "Number of states in S1 and S2: " << exploredS1.size() << "\n";
+        cout << "Number of states in R(S1): " << exploredS1.size() << "\n";
+        cout << "Number of states in R(S2): " << exploredS1.size() << "\n";
+        cout << "Number of states in R(S1) and R(S2): " << exploredS1.size() << "\n";
     } else {
         exploredS1 = dfs_search(s1, "R(S1).txt");
         exploredS2 = dfs_search(s2, "R(S2).txt");
