@@ -11,19 +11,22 @@
 #include <cstring>
 using namespace std;
 
-#define N 3
+#define N 3 // constant to indicate the width and height of a grid
 
-vector< vector<int> > getNeighbourCoords(int x, int y);
-vector<int> getEmptySpaceCoords(vector< vector<char> > array);
-vector < vector<char> > generateNewGrid(int oldX, int oldY, int newX, int newY, vector< vector<char> > array);
-set<vector< vector<char> >> dfs_search(vector< vector<char> > startState, char* file_name);
-void writeGrid(vector< vector<char> > array, char* file_name);
-string gridToString(vector< vector<char> > array);
-bool isSolvable(string str);
 void searchAlgorithm(vector< vector<char> > s1, vector< vector<char> > s2);
+set<vector< vector<char> >> dfs_search(vector< vector<char> > startState, char* file_name);
+
+vector < vector<char> > generateNewGrid(int oldX, int oldY, int newX, int newY, vector< vector<char> > array);
+vector<int> getEmptySpaceCoords(vector< vector<char> > array);
+vector< vector<int> > getNeighbourCoords(int x, int y);
+void writeGrid(vector< vector<char> > array, char* file_name);
+
+bool isSolvable(string str);
+string gridToString(vector< vector<char> > array);
 vector< vector<char> > stringToGrid(char *str);
 
 int main(int argc, char *argv[]) {
+    // The inputs to the program are represented as 9-character stringss
     if (argc != 3) {
         cout << "Invalid number of parameters\n";
         return 0;
@@ -32,22 +35,29 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    vector< vector<char> > s1 = stringToGrid(argv[1]);
+    vector< vector<char> > s1 = stringToGrid(argv[1]); // converts string representation of grid to an array representation
     vector< vector<char> > s2 = stringToGrid(argv[2]);
 
     searchAlgorithm(s1, s2);
 }
 
 void searchAlgorithm(vector< vector<char> > s1, vector< vector<char> > s2) {
-    set<vector< vector<char> >> exploredS1;
-    set<vector< vector<char> >> exploredS2;
+    set<vector< vector<char> >> exploredS1, exploredS2;
 
-    if (isSolvable(gridToString(s1)) == isSolvable(gridToString(s2))) {
+    if (isSolvable(gridToString(s1)) == isSolvable(gridToString(s2))) { // check to see if the inputs have the same solvability
+        // if s1 and s2 are both solvable or both unsolvable then the sets of their reachable
+        // states are the same; therefore we only need to run DFS once
+
+        // if both inputs have the same solvability their reachable states will be written to the same file
         exploredS1 = dfs_search(s1, "R(S1) - R(S2) - R(S1 & S2).txt");
         cout << "Number of states in R(S1): " << exploredS1.size() << "\n";
         cout << "Number of states in R(S2): " << exploredS1.size() << "\n";
         cout << "Number of states in R(S1) and R(S2): " << exploredS1.size() << "\n";
     } else {
+        // if only of s1 or s2 is solvable than the sets of their reachable states
+        // will be disjoint and they will have no reachable state in common we
+        // therefore need to run DFS twice
+
         exploredS1 = dfs_search(s1, "R(S1).txt");
         exploredS2 = dfs_search(s2, "R(S2).txt");
         cout << "Number of states in S1: " << exploredS1.size() << "\n";
@@ -57,19 +67,20 @@ void searchAlgorithm(vector< vector<char> > s1, vector< vector<char> > s2) {
 }
 
 set<vector< vector<char> >> dfs_search(vector< vector<char> > startState, char* file_name) {
-    set<vector< vector<char> >> explored;
-    stack< vector< vector<char> >> frontier;
+    set<vector< vector<char> >> explored; // set to store all explored states
+    stack< vector< vector<char> >> frontier; // stack data structure to to states on the edge of the search space
     frontier.push(startState);
     explored.insert(startState);
 
+    // Iterative depth first search to find new states
     while (!frontier.empty()) {
         vector< vector<char> > grid = frontier.top();
         frontier.pop();
         vector<int> emptySpaceCoords = getEmptySpaceCoords(grid);
         vector< vector<int> > neighbours = getNeighbourCoords(emptySpaceCoords[0], emptySpaceCoords[1]);
 
-        writeGrid(grid, file_name);
-        for (int i = 0; i < neighbours.size(); i++) {
+        writeGrid(grid, file_name); // current node is written to a given file location
+        for (int i = 0; i < neighbours.size(); i++) { // the loop generates all successors of the current node
             vector < vector<char> > newGrid = generateNewGrid(emptySpaceCoords[0], emptySpaceCoords[1], neighbours[i][0], neighbours[i][1], grid);
             if (explored.find(newGrid) == explored.end()) {
                 explored.insert(newGrid);
@@ -82,6 +93,7 @@ set<vector< vector<char> >> dfs_search(vector< vector<char> > startState, char* 
 }
 
 vector< vector<int> > getNeighbourCoords(int x, int y) {
+    // Returns a list of coordinates of all squares that are next to the empty square
     vector< vector<int> > neighbourCoords;
     if (x > 0)
         neighbourCoords.push_back({x-1, y});
@@ -96,6 +108,8 @@ vector< vector<int> > getNeighbourCoords(int x, int y) {
 }
 
 vector < vector<char> > generateNewGrid(int oldX, int oldY, int newX, int newY, vector< vector<char> > array) {
+    // Generates a new grid by placing the empty square at new coordinates
+    // The value at the new coordinates is then placed in previous location of the empty square
     vector < vector<char> > newGrid;
     copy(array.begin(), array.end(), back_inserter(newGrid));
 
@@ -107,6 +121,7 @@ vector < vector<char> > generateNewGrid(int oldX, int oldY, int newX, int newY, 
 }
 
 vector<int> getEmptySpaceCoords(vector< vector<char> > array) {
+    // Returns a coordinate pair representing the location of the empty square
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++)
             if (array[i][j] == '0') return {i,j};
@@ -114,6 +129,7 @@ vector<int> getEmptySpaceCoords(vector< vector<char> > array) {
 }
 
 string gridToString(vector< vector<char> > array) {
+    // Converts a 2d array representation of a grid to a 9 character string representation
     string newString;
     newString.resize(9);
 
@@ -126,6 +142,7 @@ string gridToString(vector< vector<char> > array) {
 }
 
 vector< vector<char> > stringToGrid(char *str) {
+    // Converts a string representation of a grid to a 2d array representation
     vector< vector<char> > newGrid = {{'-', '-', '-'}, {'-', '-', '-'}, {'-', '-', '-'}};
     for (int i = 0; i < 9; i++)
         newGrid[i / 3][i%3] = str[i];
@@ -133,6 +150,10 @@ vector< vector<char> > stringToGrid(char *str) {
 }
 
 bool isSolvable(string str) {
+    // Checks the solvability of a grid
+    // The grid is input as a string representation
+    // Solvability is checked by counting the number of inversions:
+    // if the number of inversions is even the grid is solvable; otherwise it is unsolvable
     int inv_count = 0;
     for (int i = 0; i < N*N - 1; i++) {
         for (int j = i+1; j < N*N; j++)
@@ -144,6 +165,8 @@ bool isSolvable(string str) {
 }
 
 void writeGrid(vector< vector<char> > array, char* file_name) {
+    // Writes a grid to a given file
+    // This is how the program will output R(S1) and R(S2)
     string filename(file_name);
     ofstream MyFile;
 
