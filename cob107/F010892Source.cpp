@@ -63,6 +63,7 @@ void searchAlgorithm(vector< vector<char> > s1, vector< vector<char> > s2) {
         cout << "Number of states in R(S1): " << exploredS1.size() << "\n";
         cout << "Number of states in R(S2): " << exploredS2.size() << "\n";
         cout << "Number of states in both R(S1) and R(S2): " << '0' << "\n";
+        cout << "R(S1 & S2) = ∅" << "\n";
     }
 }
 
