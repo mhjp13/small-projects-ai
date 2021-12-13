@@ -52,7 +52,7 @@ void searchAlgorithm(vector< vector<char> > s1, vector< vector<char> > s2) {
         exploredS1 = dfs_search(s1, "R(S1) - R(S2) - R(S1 & S2).txt");
         cout << "Number of states in R(S1): " << exploredS1.size() << "\n";
         cout << "Number of states in R(S2): " << exploredS1.size() << "\n";
-        cout << "Number of states in R(S1) and R(S2): " << exploredS1.size() << "\n";
+        cout << "Number of states in both R(S1) and R(S2): " << exploredS1.size() << "\n";
     } else {
         // if only of s1 or s2 is solvable than the sets of their reachable states
         // will be disjoint and they will have no reachable state in common we
@@ -60,9 +60,9 @@ void searchAlgorithm(vector< vector<char> > s1, vector< vector<char> > s2) {
 
         exploredS1 = dfs_search(s1, "R(S1).txt");
         exploredS2 = dfs_search(s2, "R(S2).txt");
-        cout << "Number of states in S1: " << exploredS1.size() << "\n";
-        cout << "Number of states in S2: " << exploredS2.size() << "\n";
-        cout << "Number of states in S1 and S2: " << '0' << "\n";
+        cout << "Number of states in R(S1): " << exploredS1.size() << "\n";
+        cout << "Number of states in R(S2): " << exploredS2.size() << "\n";
+        cout << "Number of states in both R(S1) and R(S2): " << '0' << "\n";
     }
 }
 
