@@ -26,7 +26,7 @@ string gridToString(vector< vector<char> > array);
 vector< vector<char> > stringToGrid(char *str);
 
 int main(int argc, char *argv[]) {
-    // The inputs to the program are represented as 9-character stringss
+    // The inputs to the program are represented as 9-character strings
     if (argc != 3) {
         cout << "Invalid number of parameters\n";
         return 0;
