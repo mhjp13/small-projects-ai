@@ -15,6 +15,7 @@ speechrecognition = "*"
 pyaudio = "*"
 requests = "*"
 beautifulsoup4 = "*"
+numpy = "*"
 
 [dev-packages]
 
