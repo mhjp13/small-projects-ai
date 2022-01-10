@@ -16,6 +16,7 @@ pyaudio = "*"
 requests = "*"
 beautifulsoup4 = "*"
 numpy = "*"
+matplotlib = "*"
 
 [dev-packages]
 
