@@ -17,6 +17,7 @@ requests = "*"
 beautifulsoup4 = "*"
 numpy = "*"
 matplotlib = "*"
+plotly = "*"
 
 [dev-packages]
 
