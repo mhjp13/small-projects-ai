@@ -9,7 +9,6 @@ scipy = "*"
 pylint = "*"
 scikit-learn = "*"
 opencv-python = "*"
-tensorflow = "*"
 nltk = "*"
 speechrecognition = "*"
 pyaudio = "*"
@@ -20,6 +19,7 @@ matplotlib = "*"
 plotly = "*"
 nbconvert = "*"
 h5py = "*"
+tensorflow = "*"
 
 [dev-packages]
 
