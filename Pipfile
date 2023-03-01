@@ -21,6 +21,8 @@ nbconvert = "*"
 h5py = "*"
 tensorflow = "*"
 ipykernel = "*"
+notebook = "*"
+pandas = "*"
 
 [dev-packages]
 
