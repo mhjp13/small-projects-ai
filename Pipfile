@@ -23,6 +23,7 @@ tensorflow = "*"
 ipykernel = "*"
 notebook = "*"
 pandas = "*"
+split-folders = "*"
 
 [dev-packages]
 
