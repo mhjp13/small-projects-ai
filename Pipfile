@@ -24,6 +24,9 @@ ipykernel = "*"
 notebook = "*"
 pandas = "*"
 split-folders = "*"
+jupyter-http-over-ws = "*"
+keras-tuner = "*"
+tensorflow-addons = "*"
 
 [dev-packages]
 
