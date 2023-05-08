@@ -27,6 +27,7 @@ split-folders = "*"
 jupyter-http-over-ws = "*"
 keras-tuner = "*"
 tensorflow-addons = "*"
+seaborn = "*"
 
 [dev-packages]
 
