@@ -28,6 +28,7 @@ jupyter-http-over-ws = "*"
 keras-tuner = "*"
 tensorflow-addons = "*"
 seaborn = "*"
+ipynb = "*"
 
 [dev-packages]
 
