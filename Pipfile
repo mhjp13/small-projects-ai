@@ -29,6 +29,7 @@ keras-tuner = "*"
 tensorflow-addons = "*"
 seaborn = "*"
 ipynb = "*"
+torch = "*"
 
 [dev-packages]
 
