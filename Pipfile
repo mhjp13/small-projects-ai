@@ -30,6 +30,8 @@ tensorflow-addons = "*"
 seaborn = "*"
 ipynb = "*"
 torch = "*"
+lxml = "==4.8.0"
+pandas-datareader = "*"
 
 [dev-packages]
 
