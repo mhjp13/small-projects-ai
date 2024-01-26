@@ -33,6 +33,7 @@ torch = "*"
 lxml = "==4.8.0"
 pandas-datareader = "*"
 torchvision = "*"
+d2l = "==1.0.3"
 
 [dev-packages]
 
