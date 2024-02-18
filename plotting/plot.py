@@ -2,7 +2,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import plotly.io as pio
 
-def set_renderer(renderer="notebook_connected"):
+def set_renderer(renderer="plotly_mimetype+notebook"):
     """
     Set the default renderer for Plotly plots.
 
